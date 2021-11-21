@@ -9,13 +9,13 @@ import cog
 from generate import sample, get_mean_style
 from model import StyledGenerator
 
-SIZE = 1024
+SIZE = 256
 
 
 class Predictor(cog.Predictor):
     def setup(self):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.generator = StyledGenerator(512).to(self.device)
+        self.generator = StyledGenerator().to(self.device)
         print("Loading checkpoint")
         self.generator.load_state_dict(
             torch.load(

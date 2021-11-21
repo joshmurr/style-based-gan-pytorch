@@ -12,7 +12,7 @@ def get_mean_style(generator, device):
     mean_style = None
 
     for i in range(10):
-        style = generator.mean_style(torch.randn(1024, 512).to(device))
+        style = generator.mean_style(torch.randn(256, 64).to(device))
 
         if mean_style is None:
             mean_style = style
@@ -26,7 +26,7 @@ def get_mean_style(generator, device):
 @torch.no_grad()
 def sample(generator, step, mean_style, n_sample, device):
     image = generator(
-        torch.randn(n_sample, 512).to(device),
+        torch.randn(n_sample, 64).to(device),
         step=step,
         alpha=1,
         mean_style=mean_style,
@@ -37,8 +37,8 @@ def sample(generator, step, mean_style, n_sample, device):
 
 @torch.no_grad()
 def style_mixing(generator, step, mean_style, n_source, n_target, device):
-    source_code = torch.randn(n_source, 512).to(device)
-    target_code = torch.randn(n_target, 512).to(device)
+    source_code = torch.randn(n_source, 64).to(device)
+    target_code = torch.randn(n_target, 64).to(device)
     
     shape = 4 * 2 ** step
     alpha = 1
@@ -73,7 +73,7 @@ def style_mixing(generator, step, mean_style, n_source, n_target, device):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--size', type=int, default=1024, help='size of the image')
+    parser.add_argument('--size', type=int, default=256, help='size of the image')
     parser.add_argument('--n_row', type=int, default=3, help='number of rows of sample matrix')
     parser.add_argument('--n_col', type=int, default=5, help='number of columns of sample matrix')
     parser.add_argument('path', type=str, help='path to checkpoint file')
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     
     device = 'cuda'
 
-    generator = StyledGenerator(512).to(device)
+    generator = StyledGenerator().to(device)
     generator.load_state_dict(torch.load(args.path)['g_running'])
     generator.eval()
 
