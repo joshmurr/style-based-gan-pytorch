@@ -287,7 +287,7 @@ if __name__ == '__main__':
         help='class of gan loss',
     )
     parser.add_argument(
-        '--iterations', action='store_true', help='number of training iterations'
+        '--iterations', default=10000, type=int, help='number of training iterations'
     )
 
     args = parser.parse_args()
