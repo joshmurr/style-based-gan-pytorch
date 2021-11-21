@@ -314,7 +314,7 @@ class StyledConvBlock(nn.Module):
         out_channel,
         kernel_size=3,
         padding=1,
-        style_dim=512,
+        style_dim=64,
         initial=False,
         upsample=False,
         fused=False,
@@ -377,29 +377,29 @@ class Generator(nn.Module):
 
         self.progression = nn.ModuleList(
             [
-                StyledConvBlock(512, 512, 3, 1, initial=True),  # 4
-                StyledConvBlock(512, 512, 3, 1, upsample=True),  # 8
-                StyledConvBlock(512, 512, 3, 1, upsample=True),  # 16
-                StyledConvBlock(512, 512, 3, 1, upsample=True),  # 32
-                StyledConvBlock(512, 256, 3, 1, upsample=True),  # 64
-                StyledConvBlock(256, 128, 3, 1, upsample=True, fused=fused),  # 128
-                StyledConvBlock(128, 64, 3, 1, upsample=True, fused=fused),  # 256
-                StyledConvBlock(64, 32, 3, 1, upsample=True, fused=fused),  # 512
-                StyledConvBlock(32, 16, 3, 1, upsample=True, fused=fused),  # 1024
+                StyledConvBlock(in_channels=64, out_channels=64, kernel_size=3, padding_size=1, styled_dim=8,  initial=True),  # 4
+                StyledConvBlock(in_channels=64, out_channels=64, kernel_size=3, padding_size=1, styled_dim=8, upsample=True),  # 8
+                StyledConvBlock(in_channels=64, out_channels=64, kernel_size=3, padding_size=1, styled_dim=8, upsample=True),  # 16
+                StyledConvBlock(in_channels=64, out_channels=64, kernel_size=3, padding_size=1, styled_dim=8, upsample=True),  # 32
+                StyledConvBlock(in_channels=64, out_channels=32, kernel_size=3, padding_size=1, styled_dim=8, upsample=True),  # 64
+                StyledConvBlock(in_channels=32, out_channels=16, kernel_size=3, padding_size=1, styled_dim=8, upsample=True, fused=fused),  # 128
+                StyledConvBlock(in_channels=16, out_channels= 8, kernel_size=3, padding_size=1, styled_dim=8, upsample=True, fused=fused),  # 256
+                # StyledConvBlock(in_channels= 64, out_channels= 32, kernel_size=3, padding_size=1, styled_dim = 64, upsample=True, fused=fused),  # 512
+                # StyledConvBlock(in_channels= 32, out_channels= 16, kernel_size=3, padding_size=1, styled_dim = 64, upsample=True, fused=fused),  # 1024
             ]
         )
 
         self.to_rgb = nn.ModuleList(
             [
-                EqualConv2d(512, 3, 1),
-                EqualConv2d(512, 3, 1),
-                EqualConv2d(512, 3, 1),
-                EqualConv2d(512, 3, 1),
-                EqualConv2d(256, 3, 1),
-                EqualConv2d(128, 3, 1),
+                EqualConv2d(64, 3, 1),
+                EqualConv2d(64, 3, 1),
+                EqualConv2d(64, 3, 1),
                 EqualConv2d(64, 3, 1),
                 EqualConv2d(32, 3, 1),
                 EqualConv2d(16, 3, 1),
+                EqualConv2d( 8, 3, 1),
+                # EqualConv2d( 4, 3, 1),
+                # EqualConv2d( 2, 3, 1),
             ]
         )
 
@@ -449,7 +449,7 @@ class Generator(nn.Module):
 
 
 class StyledGenerator(nn.Module):
-    def __init__(self, code_dim=512, n_mlp=8):
+    def __init__(self, code_dim=64, n_mlp=8):
         super().__init__()
 
         self.generator = Generator(code_dim)
@@ -509,15 +509,15 @@ class Discriminator(nn.Module):
 
         self.progression = nn.ModuleList(
             [
-                ConvBlock(16, 32, 3, 1, downsample=True, fused=fused),  # 512
-                ConvBlock(32, 64, 3, 1, downsample=True, fused=fused),  # 256
-                ConvBlock(64, 128, 3, 1, downsample=True, fused=fused),  # 128
-                ConvBlock(128, 256, 3, 1, downsample=True, fused=fused),  # 64
-                ConvBlock(256, 512, 3, 1, downsample=True),  # 32
-                ConvBlock(512, 512, 3, 1, downsample=True),  # 16
-                ConvBlock(512, 512, 3, 1, downsample=True),  # 8
-                ConvBlock(512, 512, 3, 1, downsample=True),  # 4
-                ConvBlock(513, 512, 3, 1, 4, 0),
+                # ConvBlock( 2,  4, 3, 1, downsample=True, fused=fused),  # 512
+                ConvBlock( 4,  8, 3, 1, downsample=True, fused=fused),  # 256
+                ConvBlock( 8, 16, 3, 1, downsample=True, fused=fused),  # 128
+                ConvBlock(16, 32, 3, 1, downsample=True, fused=fused),  # 64
+                ConvBlock(32, 64, 3, 1, downsample=True),  # 32
+                ConvBlock(64, 64, 3, 1, downsample=True),  # 16
+                ConvBlock(64, 64, 3, 1, downsample=True),  # 8
+                ConvBlock(64, 64, 3, 1, downsample=True),  # 4
+                ConvBlock(64, 64, 3, 1, 4, 0),
             ]
         )
 
@@ -530,15 +530,15 @@ class Discriminator(nn.Module):
 
         self.from_rgb = nn.ModuleList(
             [
+                # make_from_rgb(16),
+                make_from_rgb(4),
+                make_from_rgb(8),
                 make_from_rgb(16),
                 make_from_rgb(32),
                 make_from_rgb(64),
-                make_from_rgb(128),
-                make_from_rgb(256),
-                make_from_rgb(512),
-                make_from_rgb(512),
-                make_from_rgb(512),
-                make_from_rgb(512),
+                make_from_rgb(64),
+                make_from_rgb(64),
+                make_from_rgb(64),
             ]
         )
 
@@ -546,7 +546,7 @@ class Discriminator(nn.Module):
 
         self.n_layer = len(self.progression)
 
-        self.linear = EqualLinear(512, 1)
+        self.linear = EqualLinear(64, 1)  # ***
 
     def forward(self, input, step=0, alpha=-1):
         for i in range(step, -1, -1):

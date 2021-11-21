@@ -54,7 +54,7 @@ def train(args, dataset, generator, discriminator):
     adjust_lr(g_optimizer, args.lr.get(resolution, 0.001))
     adjust_lr(d_optimizer, args.lr.get(resolution, 0.001))
 
-    pbar = tqdm(range(3_000_000))
+    pbar = tqdm(range(args.iterations))
 
     requires_grad(generator, False)
     requires_grad(discriminator, True)
@@ -251,7 +251,7 @@ def train(args, dataset, generator, discriminator):
 
 
 if __name__ == '__main__':
-    code_size = 512
+    code_size = 64 # ***
     batch_size = 16
     n_critic = 1
 
@@ -261,7 +261,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--phase',
         type=int,
-        default=600_000,
+        default=500,
         help='number of samples used for each training phases',
     )
     parser.add_argument('--lr', default=0.001, type=float, help='learning rate')
@@ -285,6 +285,9 @@ if __name__ == '__main__':
         default='wgan-gp',
         choices=['wgan-gp', 'r1'],
         help='class of gan loss',
+    )
+    parser.add_argument(
+        '--iterations', action='store_true', help='number of training iterations'
     )
 
     args = parser.parse_args()
