@@ -377,13 +377,13 @@ class Generator(nn.Module):
 
         self.progression = nn.ModuleList(
             [
-                StyledConvBlock(64, 64, kernel_size=3, padding=1, style_dim=8,  initial=True),  # 4
-                StyledConvBlock(64, 64, kernel_size=3, padding=1, style_dim=8, upsample=True),  # 8
-                StyledConvBlock(64, 64, kernel_size=3, padding=1, style_dim=8, upsample=True),  # 16
-                StyledConvBlock(64, 64, kernel_size=3, padding=1, style_dim=8, upsample=True),  # 32
-                StyledConvBlock(64, 32, kernel_size=3, padding=1, style_dim=8, upsample=True),  # 64
-                StyledConvBlock(32, 16, kernel_size=3, padding=1, style_dim=8, upsample=True, fused=fused),  # 128
-                StyledConvBlock(16,  8, kernel_size=3, padding=1, style_dim=8, upsample=True, fused=fused),  # 256
+                StyledConvBlock(64, 64, kernel_size=3, padding=1, style_dim=64,  initial=True),  # 4
+                StyledConvBlock(64, 64, kernel_size=3, padding=1, style_dim=64, upsample=True),  # 8
+                StyledConvBlock(64, 64, kernel_size=3, padding=1, style_dim=64, upsample=True),  # 16
+                StyledConvBlock(64, 64, kernel_size=3, padding=1, style_dim=64, upsample=True),  # 32
+                StyledConvBlock(64, 32, kernel_size=3, padding=1, style_dim=64, upsample=True),  # 64
+                StyledConvBlock(32, 16, kernel_size=3, padding=1, style_dim=64, upsample=True, fused=fused),  # 128
+                StyledConvBlock(16,  8, kernel_size=3, padding=1, style_dim=64, upsample=True, fused=fused),  # 256
                 # StyledConvBlock(in_channels= 64, out_channels= 32, kernel_size=3, padding_size=1, styled_dim = 64, upsample=True, fused=fused),  # 512
                 # StyledConvBlock(in_channels= 32, out_channels= 16, kernel_size=3, padding_size=1, styled_dim = 64, upsample=True, fused=fused),  # 1024
             ]
