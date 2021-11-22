@@ -109,3 +109,4 @@ venv.bak/
 pyproject.toml
 poetry.lock
 checkpoint/
+latent_space_traversal.*
