@@ -517,7 +517,7 @@ class Discriminator(nn.Module):
                 ConvBlock(64, 64, 3, 1, downsample=True),  # 16
                 ConvBlock(64, 64, 3, 1, downsample=True),  # 8
                 ConvBlock(64, 64, 3, 1, downsample=True),  # 4
-                ConvBlock(64, 64, 3, 1, 4, 0),
+                ConvBlock(65, 64, 3, 1, 4, 0),
             ]
         )
 
