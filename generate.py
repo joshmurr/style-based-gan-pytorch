@@ -76,6 +76,7 @@ if __name__ == '__main__':
     parser.add_argument('--size', type=int, default=256, help='size of the image')
     parser.add_argument('--n_row', type=int, default=3, help='number of rows of sample matrix')
     parser.add_argument('--n_col', type=int, default=5, help='number of columns of sample matrix')
+    parser.add_argument('--state_dict', type=str, default='g_running', help='state dict')
     parser.add_argument('path', type=str, help='path to checkpoint file')
     
     args = parser.parse_args()
@@ -83,7 +84,10 @@ if __name__ == '__main__':
     device = 'cuda'
 
     generator = StyledGenerator().to(device)
-    generator.load_state_dict(torch.load(args.path)['g_running'])
+    if 'train_step' in path:
+        generator.load_state_dict(torch.load(args.path)[args.state_dict])
+    else:
+        generator.load_state_dict(torch.load(args.path))
     generator.eval()
 
     mean_style = get_mean_style(generator, device)
