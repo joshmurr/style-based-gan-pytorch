@@ -384,8 +384,8 @@ class Generator(nn.Module):
                 StyledConvBlock(64, 32, kernel_size=3, padding=1, style_dim=64, upsample=True),  # 64
                 StyledConvBlock(32, 16, kernel_size=3, padding=1, style_dim=64, upsample=True, fused=fused),  # 128
                 StyledConvBlock(16,  8, kernel_size=3, padding=1, style_dim=64, upsample=True, fused=fused),  # 256
-                # StyledConvBlock(in_channels= 64, out_channels= 32, kernel_size=3, padding_size=1, styled_dim = 64, upsample=True, fused=fused),  # 512
-                # StyledConvBlock(in_channels= 32, out_channels= 16, kernel_size=3, padding_size=1, styled_dim = 64, upsample=True, fused=fused),  # 1024
+                StyledConvBlock( 8,  4, kernel_size=3, padding_size=1, styled_dim = 64, upsample=True, fused=fused),  # 512
+                StyledConvBlock( 4,  2, kernel_size=3, padding_size=1, styled_dim = 64, upsample=True, fused=fused),  # 1024
             ]
         )
 
@@ -398,8 +398,8 @@ class Generator(nn.Module):
                 EqualConv2d(32, 3, 1),
                 EqualConv2d(16, 3, 1),
                 EqualConv2d( 8, 3, 1),
-                # EqualConv2d( 4, 3, 1),
-                # EqualConv2d( 2, 3, 1),
+                EqualConv2d( 4, 3, 1),
+                EqualConv2d( 2, 3, 1),
             ]
         )
 
@@ -432,7 +432,7 @@ class Generator(nn.Module):
 
             if i > 0 and step > 0:
                 out_prev = out
-                
+
             out = conv(out, style_step, noise[i])
 
             if i == step:
@@ -509,7 +509,7 @@ class Discriminator(nn.Module):
 
         self.progression = nn.ModuleList(
             [
-                # ConvBlock( 2,  4, 3, 1, downsample=True, fused=fused),  # 512
+                ConvBlock( 2,  4, 3, 1, downsample=True, fused=fused),  # 512
                 ConvBlock( 4,  8, 3, 1, downsample=True, fused=fused),  # 256
                 ConvBlock( 8, 16, 3, 1, downsample=True, fused=fused),  # 128
                 ConvBlock(16, 32, 3, 1, downsample=True, fused=fused),  # 64
@@ -517,7 +517,7 @@ class Discriminator(nn.Module):
                 ConvBlock(64, 64, 3, 1, downsample=True),  # 16
                 ConvBlock(64, 64, 3, 1, downsample=True),  # 8
                 ConvBlock(64, 64, 3, 1, downsample=True),  # 4
-                ConvBlock(65, 64, 3, 1, 4, 0),
+                ConvBlock(65, 64, 3, 1, 4, 0), # NOTE the 65
             ]
         )
 
@@ -530,7 +530,7 @@ class Discriminator(nn.Module):
 
         self.from_rgb = nn.ModuleList(
             [
-                # make_from_rgb(16),
+                make_from_rgb(2),
                 make_from_rgb(4),
                 make_from_rgb(8),
                 make_from_rgb(16),

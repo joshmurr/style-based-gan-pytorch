@@ -63,20 +63,20 @@ def get_interp_frames(generator, step, mean_style, num_interps):
 	return images, codes
 
 def normalize_frames(frames):
-	normed = torch.zeros(*frames.size())
-	for i, img in enumerate(frames):
-		_min = img.min()
-		_max = img.max()
-		img -= _min
-		img *= 255 / (_max - _min)
-		normed[i] = img
-	return normed
+	# normed = torch.zeros(*frames.size())
+	# for i, img in enumerate(frames):
+		# _min = img.min()
+		# _max = img.max()
+		# img -= _min
+		# img *= 255 / (_max - _min)
+		# normed[i] = img
+	return frames.mul(255).add_(0.5).clamp_(0, 255)
 
 def make_gif(frames, size=(256,256), name='latent_space_traversal.gif'):
-	normed_frames = normalize(frames)
+	normed_frames = normalize_frames(frames)
 
 	for img in normed_framed:
-		img = img.permute(1,2,0).detach().cpu().numpy().astype(np.uint8)
+		img = img.permute(1,2,0).to('cpu', torch.uint8).numpy()
 
 		all_imgs.append(Image.fromarray(img).resize(size))
 
@@ -133,6 +133,7 @@ if __name__ == '__main__':
 	parser.add_argument('--state_dict', type=str, default='g_running', help='state dict')
 	parser.add_argument('--output', type=str, default='images', help='image, gif or video')
 	parser.add_argument('--frames', type=int, default=32, help='num frames for GIF or video')
+	parser.add_argument('--name', type=str, default='latent_space_traversal', help='name of output')
 	parser.add_argument('path', type=str, help='path to checkpoint file')
 
 	args = parser.parse_args()
@@ -153,10 +154,10 @@ if __name__ == '__main__':
 
 	if args.output == 'gif':
 		frames, _ = get_interp_frames(generator, step, mean_style, args.frames)
-		img = make_gif(frames)
+		img = make_gif(frames, name=args.name + '.gif')
 	elif args.output == 'video':
 		frames, _ = get_interp_frames(generator, step, mean_style, args.frames)
-		img = make_video(frames)
+		img = make_video(frames, name=args.name + '.mp4')
 	elif args.output == 'image':
 		img = sample(generator, step, mean_style, args.n_row * args.n_col, device)
 		utils.save_image(img, 'sample.png', nrow=args.n_col, normalize=True, range=(-1, 1))

@@ -1,4 +1,4 @@
-# Byte-compiled / optimized / DLL files
+#16 Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -106,7 +106,10 @@ venv.bak/
 *.lmdb
 
 *.png
+*.jpg
+*.jpeg
 pyproject.toml
 poetry.lock
 checkpoint/
 latent_space_traversal.*
+*.mp4
