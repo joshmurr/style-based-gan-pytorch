@@ -238,7 +238,7 @@ def train(args, dataset, generator, discriminator):
                 range=(-1, 1),
             )
 
-        if (i + 1) % 10000 == 0:
+        if ((i + 1) % 10000 == 0) or i == args.iterations - 1:
             torch.save(
                 g_running.state_dict(), f'checkpoint/{str(i + 1).zfill(6)}.model'
             )

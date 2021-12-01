@@ -384,8 +384,8 @@ class Generator(nn.Module):
                 StyledConvBlock(64, 32, kernel_size=3, padding=1, style_dim=64, upsample=True),  # 64
                 StyledConvBlock(32, 16, kernel_size=3, padding=1, style_dim=64, upsample=True, fused=fused),  # 128
                 StyledConvBlock(16,  8, kernel_size=3, padding=1, style_dim=64, upsample=True, fused=fused),  # 256
-                StyledConvBlock( 8,  4, kernel_size=3, padding_size=1, styled_dim = 64, upsample=True, fused=fused),  # 512
-                StyledConvBlock( 4,  2, kernel_size=3, padding_size=1, styled_dim = 64, upsample=True, fused=fused),  # 1024
+                StyledConvBlock( 8,  4, kernel_size=3, padding=1, style_dim=64, upsample=True, fused=fused),  # 512
+                StyledConvBlock( 4,  2, kernel_size=3, padding=1, style_dim=64, upsample=True, fused=fused),  # 1024
             ]
         )
 
